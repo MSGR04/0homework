@@ -28,11 +28,17 @@ func main() {
 
 func handleRequest(conn net.Conn) {
 	defer conn.Close()
+
+	if _, err := conn.Write([]byte("OK\n")); err != nil {
+		fmt.Println("Error writing response:", err)
+		return
+	}
+
 	scanner := bufio.NewScanner(conn)
 	for scanner.Scan() {
 		line := scanner.Text()
 		fmt.Printf("Received message from client: %s\n", line)
-		conn.Write([]byte("OK\\n"))
+		conn.Write([]byte(fmt.Sprintf("Received message from client: %s\n", line)))
 	}
 
 	if err := scanner.Err(); err != nil {
