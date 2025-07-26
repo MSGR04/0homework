@@ -17,19 +17,12 @@ func main() {
 
 	scanner := bufio.NewScanner(os.Stdin)
 	fmt.Println("Enter text to server: ")
-	for scanner.Scan() {
-		text := scanner.Text()
-		conn.Write([]byte(text + "\n"))
-
-		response, err := bufio.NewReader(conn).ReadString('\n')
-		if err != nil {
-			fmt.Println("Error reading from server:", err)
-		}
-		if response == "OK\\n" {
-			fmt.Println("Text says OK: ")
-		} else {
-			fmt.Println("Text says not OK, but: ", response)
-		}
+	conn.Write([]byte("ping\n"))
+	response, _ := bufio.NewReader(conn).ReadString('\n')
+	if response == "OK\n" {
+		fmt.Println("OK")
+	} else {
+		fmt.Println("NOT OK:", response)
 	}
 
 	if err := scanner.Err(); err != nil {
